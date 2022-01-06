@@ -108,7 +108,7 @@ static unsigned char GfMultBy02(unsigned char num) {
 int main() {
   memcpy(g_roundKeyTable, key, 4 * Nk);
 
-  printf("%x \n", g_roundKeyTable[16]);
+  // printf("%x \n", g_roundKeyTable[16]);
 
   pRoundKey = &g_roundKeyTable[4 * Nk];
 
@@ -116,7 +116,7 @@ int main() {
     memcpy(pRoundKey, pRoundKey - 4, 4);
 
     if (i % Nk == 0) {
-      printf("%d \n", i);
+      // printf("%d \n", i);
       RotationWord(pRoundKey);
       SubBytes(pRoundKey, 4, 0);
       XorBytes(pRoundKey, Rcon, 4);
@@ -129,7 +129,13 @@ int main() {
     // XorBytes(pRoundKey, pRoundKey - 4 * Nk, 4);
   }
 
-  printf("Hello, World!");
+  printf("\nresult --->>> \n");
+  for (int i = 0; i < 176; i++) {
+    if (i % 8 == 0 && i > 1) {
+      printf("\n");
+    }
+    printf("%x ", g_roundKeyTable[i]);
+  }
 
   return 0;
 }
