@@ -1,0 +1,82 @@
+<html>
+
+<head>
+    <title>AES</title>
+</head>
+<script>
+    let key = [0x20, 0x85, 0x52, 0x29, 0xF8, 0xA1, 0x65, 0x74, 0x4B, 0xE1, 0x8A, 0xCF, 0x94, 0xC2, 0x9E, 0x8D]
+    let offset = [0x78, 0x28, 0x65, 0x6D, 0xFC, 0x2F, 0xBB, 0x0F, 0x18, 0xFB, 0x62, 0x22, 0x45, 0x3C, 0x0C, 0x9F]
+
+    const Nk = 128 / 32
+    const Nb = 4
+    const Nr = 10
+    // const g_roundKeyTable = new Array(4 * Nb * (Nr + 1)).fill(0)
+    const g_roundKeyTable = new Array(4 * Nb * (Nr + 1) - 16).fill(0)
+
+    window.onload = function () {
+        console.log('fuck')
+        iOS_AES_Key2_Encryption()
+    }
+
+    function iOS_AES_Key2_Encryption() {
+        let array = [0x76, 0x72, 0x66, 0x70, 0x77, 0x64, 0x2D, 0x06, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00, 0x00]
+        console.log(array)
+        console.log(buf2hex(array))
+        AES_Init()
+    }
+
+    function AES_Init() {
+        // 先拼接
+        g_roundKeyTable.unshift(...key)
+        console.error(g_roundKeyTable)
+
+        _cur = 4 * Nk
+
+        // let pRoundKey = 0
+
+        for (i = Nk; i < Nb * (Nr + 1); _cur += 4, i++) {
+            // console.log(i)
+            console.log('_cur ---> ', _cur)
+
+            let temp = g_roundKeyTable.slice(_cur - 4, _cur)
+            console.error('temp', temp)
+
+            if (i % Nk == 0) {
+                // console.error('if', i)
+                let resultArray = RotationWord(temp)
+                g_roundKeyTable[_cur - 4] = resultArray[0]
+                g_roundKeyTable[_cur - 3] = resultArray[1]
+                g_roundKeyTable[_cur - 2] = resultArray[2]
+                g_roundKeyTable[_cur - 1] = resultArray[3]
+
+
+            } else if (Nk > 6 && i % Nk == Nb) {
+                console.error('else', i)
+            }
+        }
+    }
+
+    function RotationWord(tempArray) {
+        let temp = tempArray[0]
+        tempArray[0] = tempArray[1]
+        tempArray[1] = tempArray[2]
+        tempArray[2] = tempArray[3]
+        tempArray[3] = temp
+        return temp
+    }
+
+    function SubBytes(tempArray) {
+        
+    }
+
+    function buf2hex(buffer) {
+        return [...new Uint8Array(buffer)]
+            .map(x => x.toString(16).padStart(2, '0'))
+            .join(' ');
+    }
+</script>
+
+<body>
+</body>
+
+</html>
